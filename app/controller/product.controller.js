@@ -6,12 +6,14 @@ const index = async (req, res) => {
   const trx = await knex.transaction({ readOnly: true });
   try {
     const products = await Product.query(trx);
+    await trx.commit();
     res.status(200).json({
       status: 200,
       message: "OK!",
       data: products,
     });
   } catch (error) {
+    await trx.rollback();
     console.error(error);
     return res.status(500).json({
       message: "Internal Server Error!",
@@ -26,12 +28,14 @@ const byCategory = async (req, res) => {
       "category_id",
       req.params.category_id
     );
+    await trx.commit();
     res.status(200).json({
       status: 200,
       message: "OK!",
       data: products,
     });
   } catch (error) {
+    await trx.rollback();
     console.error(error);
     return res.status(500).json({
       message: "Internal Server Error!",

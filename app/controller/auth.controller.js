@@ -38,17 +38,20 @@ const login = async (req, res) => {
 
       user_data.token = token;
 
+      await trx.commit();
       res.status(200).json({
         message: "Login success!",
         data: user_data
       });
 
     } else {
+      await trx.commit();
       res.status(400).json({
         message: "Invalid Credentials!",
       });
     }
   } catch (error) {
+    await trx.rollback();
     console.error(error);
     res.status(500).json({
       message: "Internal Server Error!",
