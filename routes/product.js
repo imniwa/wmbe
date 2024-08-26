@@ -73,8 +73,10 @@ router.get("/product/category/:category_id", AuthMiddleware, ProductController.b
  *               type: string
  *              price:
  *               type: number
+ *               example: 10000
  *              category_id:
  *               type: integer
+ *               example: 1
  *     responses:
  *      200:
  *        description: Success

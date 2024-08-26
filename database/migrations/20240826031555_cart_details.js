@@ -9,8 +9,8 @@ exports.up = function (knex) {
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     // Relations
-    table.foreign("cart_id").references("carts.id");
-    table.foreign("product_id").references("products.id");
+    table.foreign("cart_id").references("carts.id").onDelete("CASCADE");
+    table.foreign("product_id").references("products.id").onDelete("CASCADE");
   });
 };
 
