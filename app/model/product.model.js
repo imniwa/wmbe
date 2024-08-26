@@ -20,7 +20,7 @@ class Product extends Model {
           type: "string",
         },
         price: {
-          type: "float",
+          type: "number",
         },
         category_id: {
           type: "integer",
