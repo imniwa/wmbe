@@ -2,10 +2,12 @@ const bcrypt = require("bcryptjs/dist/bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
 const User = require("../model/user.model");
+const knex = require("../../config/database");
 
 const login = async (req, res) => {
+  const trx = await knex.transaction({ readOnly: true });
   try {
-    const user = await User.query()
+    const user = await User.query(trx)
       .select([
         "users.id",
         "users.name",
@@ -18,7 +20,7 @@ const login = async (req, res) => {
       .first();
 
     if (user && (await bcrypt.compare(req.body.password, user.password))) {
-      const user_data = await User.query()
+      const user_data = await User.query(trx)
         .select([
           "users.id",
           "users.name",
@@ -55,8 +57,9 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
+  const trx = await knex.transaction({ isolationLevel: "read committed" });
   try {
-    let userCheck = await User.query().where("email", req.body.email).first();
+    let userCheck = await User.query(trx).where("email", req.body.email).first();
     if (userCheck) {
       return res.status(400).json({
         status: 400,
@@ -64,11 +67,13 @@ const register = async (req, res) => {
       });
     }
 
-    const user = await User.query().insert({
+    const user = await User.query(trx).insert({
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
     });
+
+    await trx.commit();
 
     res.status(200).json({
       status: 200,
@@ -76,6 +81,7 @@ const register = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    await trx.rollback();
     console.error(error);
     return res.status(500).json({
       message: "Internal Server Error!",
