@@ -1,12 +1,15 @@
 exports.up = function (knex) {
   return knex.schema.createTable("carts", (table) => {
-    table.increments("id").primary().unsigned();
-    table.float("total_amount").notNullable();
-    table.integer("user_id").unsigned().notNullable();
+    // Main Columns
+    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
+    table.float("total_amount").notNullable().defaultTo(0);
+    table.boolean("checkout").defaultTo(false);
     // Timestamps
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table.timestamp("deleted_at").nullable();
     // Relations
+    table.uuid("user_id").notNullable();
     table.foreign("user_id").references("users.id");
   });
 };

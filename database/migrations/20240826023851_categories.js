@@ -1,6 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("categories", (table) => {
-    table.increments("id").primary().unsigned();
+    // Main Columns
+    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
     table.string("name").unique().notNullable();
     // Timestamps
     table.timestamp("created_at").defaultTo(knex.fn.now());

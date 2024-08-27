@@ -1,14 +1,16 @@
 exports.up = function (knex) {
   return knex.schema.createTable("products", (table) => {
-    table.increments("id").primary().unsigned();
+    // Main Columns
+    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
     table.string("name");
     table.float("price");
-    table.integer("category_id").unsigned().notNullable();
+    table.string("thumbnail");
     // Timestamps
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();
     // Relations
+    table.uuid("category_id").notNullable();
     table.foreign("category_id").references("categories.id");
   });
 };

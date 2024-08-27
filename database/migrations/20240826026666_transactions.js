@@ -1,19 +1,21 @@
 exports.up = function (knex) {
-  return knex.schema.createTable("transaction_details", (table) => {
-    table.increments("id").primary().unsigned();
+  return knex.schema.createTable("transactions", (table) => {
+    // Main Columns
+    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
     table.integer("quantity").unsigned().notNullable();
     table.float("total_price").unsigned().notNullable();
-    table.integer("product_id").unsigned().notNullable();
-    table.integer("transaction_id").unsigned().notNullable();
     // Timestamps
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table.timestamp("deleted_at").nullable();
     // Relations
-    table.foreign("transaction_id").references("transactions.id");
+    table.uuid("product_id").notNullable();
     table.foreign("product_id").references("products.id");
+    table.uuid("cart_id").notNullable();
+    table.foreign("cart_id").references("carts.id");
   });
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable("transaction_details");
+  return knex.schema.dropTable("transactions");
 };
