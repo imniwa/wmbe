@@ -75,9 +75,8 @@ const register = async (req, res) => {
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
     });
-
+    
     await trx.commit();
-
     res.status(200).json({
       status: 200,
       message: "OK",

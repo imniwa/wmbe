@@ -1,7 +1,6 @@
 const knex = require("../../config/database");
 const { decodeToken } = require("../../library/helper/token");
 const Cart = require("../model/cart.model");
-const CartDetails = require("../model/carts_detail.model");
 const Product = require("../model/product.model");
 
 const index = async (req, res) => {

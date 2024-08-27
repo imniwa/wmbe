@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("transactions", (table) => {
     // Main Columns
-    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
+    table.uuid("id").primary();
     table.integer("quantity").unsigned().notNullable();
     table.float("total_price").unsigned().notNullable();
     // Timestamps

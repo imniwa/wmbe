@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-
+const { v4: uuid } = require("uuid");
 const { Model } = require("objection");
 
 Model.knex(db);
@@ -27,6 +27,16 @@ class User extends Model {
         },
       },
     };
+  }
+
+  $beforeInsert() {
+    this.id = uuid();
+  }
+
+  $formatJson(json) {
+    json = super.$formatJson(json);
+    delete json.password;
+    return json;
   }
 }
 

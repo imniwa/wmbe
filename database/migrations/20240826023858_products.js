@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("products", (table) => {
     // Main Columns
-    table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
+    table.uuid("id").primary();
     table.string("name");
     table.float("price");
     table.string("thumbnail");

@@ -12,6 +12,10 @@ const knex = require("knex")({
   pool: { min: 50, max: 100 },
 });
 
+knex.on('query', (queryData) => {
+  console.info(`INFO knex:query "${queryData.sql}"`);
+})
+
 const { attachPaginate } = require("knex-paginate");
 attachPaginate();
 

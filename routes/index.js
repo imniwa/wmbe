@@ -10,8 +10,8 @@ const routes = (app, prefix) => {
   app.use(prefix, UserRouter);
   app.use(prefix, CategoryRouter);
   app.use(prefix, ProductRouter);
-  app.use(prefix, CartRouter)
-  app.use(prefix, TransactionRouter);
+  // app.use(prefix, CartRouter)
+  // app.use(prefix, TransactionRouter);
 };
 
 module.exports = routes;
