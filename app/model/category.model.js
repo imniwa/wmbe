@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-
+const { v4: uuid } = require("uuid");
 const { Model } = require("objection");
 
 Model.knex(db);
@@ -21,6 +21,10 @@ class Category extends Model {
         },
       },
     };
+  }
+
+  $beforeInsert() {
+    this.id = uuid();
   }
 }
 
