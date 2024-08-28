@@ -13,7 +13,7 @@ class Product extends Model {
     return {
       type: "object",
 
-      required: ["name", "price", "category_id"],
+      required: ["name", "price", "thumbnail", "category_id"],
 
       properties: {
         name: {
@@ -22,6 +22,9 @@ class Product extends Model {
         price: {
           type: "number",
         },
+        thumbnail: {
+          type: "string",
+        },
         category_id: {
           type: "string",
         },
@@ -29,7 +32,7 @@ class Product extends Model {
     };
   }
 
-  $beforeInsert(){
+  $beforeInsert() {
     this.id = uuid();
   }
 }

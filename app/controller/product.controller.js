@@ -2,6 +2,8 @@ const knex = require("../../config/database");
 const Category = require("../model/category.model");
 const Product = require("../model/product.model");
 
+const { readFileSync } = require("fs");
+
 const index = async (req, res) => {
   const trx = await knex.transaction({ readOnly: true });
   try {
@@ -46,6 +48,9 @@ const byCategory = async (req, res) => {
 const store = async (req, res) => {
   const trx = await knex.transaction({ isolationLevel: "read committed" });
   try {
+    const filename = req.file.filename;
+    const { name, price, category_id } = req.body;
+
     let categoryCheck = await Category.query(trx)
       .where("id", req.body.category_id)
       .first();
@@ -56,10 +61,12 @@ const store = async (req, res) => {
     }
 
     const product = await Product.query(trx).insert({
-      name: req.body.name,
-      price: req.body.price,
-      category_id: req.body.category_id,
+      name,
+      price,
+      thumbnail: filename,
+      category_id,
     });
+
     await trx.commit();
     res.status(200).json({
       status: 200,
@@ -94,9 +101,24 @@ const destroy = async (req, res) => {
   }
 };
 
+const showImage = async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const image = readFileSync(`${__dirname}/../../uploads/${filename}`);
+    res.writeHead(200, { "Content-Type": "image/jpeg" });
+    res.end(image);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
 module.exports = {
   index,
   byCategory,
   store,
   destroy,
+  showImage
 };

@@ -5,12 +5,13 @@ exports.up = function (knex) {
     table.string("name");
     table.float("price");
     table.string("thumbnail");
+    
+    table.uuid("category_id").notNullable();
     // Timestamps
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();
     // Relations
-    table.uuid("category_id").notNullable();
     table.foreign("category_id").references("categories.id");
   });
 };

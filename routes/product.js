@@ -5,6 +5,7 @@ const router = express.Router();
 const ProductController = require("../app/controller/product.controller");
 const ProductValidator = require("../app/validator/product.validator");
 const AuthMiddleware = require("../middleware/auth.middleware");
+const uploadfile = require("../middleware/upload.middleware");
 
 /**
  * @openapi
@@ -47,7 +48,11 @@ router.get("/product", AuthMiddleware, ProductController.index);
  *      500:
  *        description: Server Error
  */
-router.get("/product/category/:category_id", AuthMiddleware, ProductController.byCategory);
+router.get(
+  "/product/category/:category_id",
+  AuthMiddleware,
+  ProductController.byCategory
+);
 
 /**
  * @openapi
@@ -61,22 +66,26 @@ router.get("/product/category/:category_id", AuthMiddleware, ProductController.b
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
  *              - name
  *              - price
+ *              - thumbnail
  *              - category_id
  *            properties:
- *              name:
+ *             name:
  *               type: string
- *              price:
+ *             price:
  *               type: number
  *               example: 10000
- *              category_id:
- *               type: integer
- *               example: 1
+ *             thumbnail:
+ *               type: string
+ *               format: binary
+ *             category_id:
+ *               type: string
+ *               example: string
  *     responses:
  *      200:
  *        description: Success
@@ -87,7 +96,13 @@ router.get("/product/category/:category_id", AuthMiddleware, ProductController.b
  *      500:
  *        description: Server Error
  */
-router.post("/product", AuthMiddleware, ProductValidator.store, ProductController.store);
+router.post(
+  "/product",
+  AuthMiddleware,
+  uploadfile.single("thumbnail"),
+  ProductValidator.store,
+  ProductController.store
+);
 
 /**
  * @openapi
@@ -112,5 +127,27 @@ router.post("/product", AuthMiddleware, ProductValidator.store, ProductControlle
  *        description: Server Error
  */
 router.delete("/product/:id", AuthMiddleware, ProductController.destroy);
+
+/**
+ * @openapi
+ * /product/image/{filename}:
+ *  get:
+ *    tags:
+ *    - Product
+ *    summary: Get product image
+ *    parameters:
+ *    - name: filename
+ *      in: path
+ *      description: filename of the product thumbnail
+ *      required: true
+ *    responses:
+ *     200:
+ *       description: Success
+ *     404:
+ *       description: Not Found
+ *     500:
+ *       description: Server Error
+ */
+router.get("/product/image/:filename", ProductController.showImage);
 
 module.exports = router;
