@@ -7,6 +7,7 @@ const addProduct2Cart = [
     .withMessage("product_id can not be empty!"),
 
   check("quantity").not().isEmpty().withMessage("quantity can not be empty!"),
+  check("quantity").toInt(),
   check("quantity").isNumeric().withMessage("quantity must be a number!"),
   check("quantity").isInt({ gt: 0 }).withMessage("quantity must be greater than 0!"),
 
@@ -29,13 +30,14 @@ const addProduct2Cart = [
   },
 ];
 
-const subtractProductFromCart = [
+const reduceProductFromCart = [
   check("product_id")
     .not()
     .isEmpty()
     .withMessage("product_id can not be empty!"),
 
   check("quantity").not().isEmpty().withMessage("quantity can not be empty!"),
+  check("quantity").toInt(),
   check("quantity").isNumeric().withMessage("quantity must be a number!"),
   check("quantity").isInt({ gt: 0 }).withMessage("quantity must be greater than 0!"),
 
@@ -65,6 +67,7 @@ const updateProductFromCart = [
     .withMessage("product_id can not be empty!"),
 
   check("quantity").not().isEmpty().withMessage("quantity can not be empty!"),
+  check("quantity").toInt(),
   check("quantity").isNumeric().withMessage("quantity must be a number!"),
   check("quantity")
     .isInt({ gt: 0 })
@@ -115,7 +118,7 @@ const removeProductFromCart = [
 
 module.exports = {
   addProduct2Cart,
-  subtractProductFromCart,
+  reduceProductFromCart,
   updateProductFromCart,
   removeProductFromCart,
 };

@@ -3,7 +3,7 @@ exports.up = function (knex) {
     // Main Columns
     table.uuid("id").primary();
     table.integer("quantity").unsigned().notNullable();
-    table.float("total_price").unsigned().notNullable();
+    table.float("total_price", 12).unsigned().notNullable();
   
     table.uuid("user_id").notNullable();
     table.uuid("product_id").notNullable();

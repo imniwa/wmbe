@@ -2,7 +2,7 @@ exports.up = function (knex) {
   return knex.schema.createTable("transactions", (table) => {
     // Main Columns
     table.uuid("id").primary();
-    table.float("total_amount").unsigned().notNullable();
+    table.float("total_amount", 12).unsigned().notNullable();
     table.datetime('date').notNullable();
 
     table.uuid("user_id").notNullable();

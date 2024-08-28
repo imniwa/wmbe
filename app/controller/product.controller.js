@@ -1,4 +1,5 @@
 const knex = require("../../config/database");
+const Cart = require("../model/cart.model");
 const Category = require("../model/category.model");
 const Product = require("../model/product.model");
 
@@ -7,7 +8,7 @@ const { readFileSync } = require("fs");
 const index = async (req, res) => {
   const trx = await knex.transaction({ readOnly: true });
   try {
-    const products = await Product.query(trx);
+    const products = await Product.query(trx).whereNull("deleted_at");
     await trx.commit();
     res.status(200).json({
       status: 200,
@@ -29,7 +30,7 @@ const byCategory = async (req, res) => {
     const products = await Product.query(trx).where(
       "category_id",
       req.params.category_id
-    );
+    ).whereNull("deleted_at");
     await trx.commit();
     res.status(200).json({
       status: 200,
@@ -85,7 +86,10 @@ const store = async (req, res) => {
 const destroy = async (req, res) => {
   const trx = await knex.transaction({ isolationLevel: "read committed" });
   try {
-    const product = await Product.query(trx).deleteById(req.params.id);
+    const product = await Product.query(trx).patchAndFetchById(req.params.id, {
+      'deleted_at': new Date().toISOString()
+    });
+    
     await trx.commit();
     res.status(200).json({
       status: 200,

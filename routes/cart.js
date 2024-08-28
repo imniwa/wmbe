@@ -108,11 +108,11 @@ router.put(
 
 /**
  * @openapi
- * /cart/subtract:
+ * /cart/reduce:
  *  delete:
  *     tags:
  *     - Cart
- *     summary: Subtract product from cart
+ *     summary: Reduce product from cart
  *     security:
  *	     - bearerAuth: []
  *     requestBody:
@@ -141,10 +141,10 @@ router.put(
  *        description: Server Error
  */
 router.delete(
-  "/cart/subtract",
+  "/cart/reduce",
   AuthMiddleware,
-  CartValidator.subtractProductFromCart,
-  CartController.subtractProductFromCart
+  CartValidator.reduceProductFromCart,
+  CartController.reduceProductFromCart
 );
 
 /**

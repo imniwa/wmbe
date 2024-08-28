@@ -1,7 +1,6 @@
 const knex = require("../../config/database");
 const Cart = require("../model/cart.model");
 const Product = require("../model/product.model");
-const Transaction = require("../model/transaction.model");
 
 const index = async (req, res) => {
   const { id: user_id } = req.user;
@@ -10,7 +9,12 @@ const index = async (req, res) => {
     let cart = await Cart.query(trx)
       .where("user_id", user_id)
       .whereNull("transaction_id")
-      .withGraphFetched("product")
+      .withGraphJoined("product", {
+        joinOperation: "innerJoin",
+      })
+      .modifyGraph("product", (builder) => {
+        builder.whereNull("deleted_at");
+      })
       .orderBy("created_at", "desc");
 
     await trx.commit();
@@ -144,8 +148,8 @@ const updateProductFromCart = async (req, res) => {
   }
 };
 
-// subtract product from cart
-const subtractProductFromCart = async (req, res) => {
+// reduce product from cart
+const reduceProductFromCart = async (req, res) => {
   const { id: user_id } = req.user;
   const { product_id, quantity } = req.body;
 
@@ -250,7 +254,7 @@ const removeProductFromCart = async (req, res) => {
 module.exports = {
   index,
   addProduct2Cart,
-  subtractProductFromCart,
+  reduceProductFromCart,
   updateProductFromCart,
   removeProductFromCart,
 };

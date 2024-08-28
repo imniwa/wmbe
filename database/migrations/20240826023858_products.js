@@ -3,7 +3,7 @@ exports.up = function (knex) {
     // Main Columns
     table.uuid("id").primary();
     table.string("name");
-    table.float("price");
+    table.float("price", 12);
     table.string("thumbnail");
     
     table.uuid("category_id").notNullable();
